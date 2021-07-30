@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProfessionnelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +11,19 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * @ApiResource(
+ *     attributes={
+ *          "security"="is_granted('ROLE_ADMIN')"
+ *     },
+ *     collectionOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          },
+ *          "post"={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          }
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=ProfessionnelRepository::class)
  */
 class Professionnel implements UserInterface, PasswordAuthenticatedUserInterface

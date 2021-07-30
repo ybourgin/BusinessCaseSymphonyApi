@@ -7,6 +7,7 @@ use App\Repository\GarageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -23,41 +24,49 @@ class Garage
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"annonce:get"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"annonce:get"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=14)
+     * @Groups({"annonce:get"})
      */
     private $siret;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"annonce:get"})
      */
     private $adresseLigne1;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"annonce:get"})
      */
     private $adresseLigne2;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"annonce:get"})
      */
     private $adresseLigne3;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"annonce:get"})
      */
     private $ville;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"annonce:get"})
      */
     private $codePostal;
 

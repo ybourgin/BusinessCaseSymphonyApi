@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource()
@@ -21,16 +22,19 @@ class Image
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
+     * @Groups({"annonce:get"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"annonce:get"})
      */
     private $path;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"annonce:get"})
      */
     private $description;
 
