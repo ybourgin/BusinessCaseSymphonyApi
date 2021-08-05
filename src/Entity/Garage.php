@@ -77,7 +77,7 @@ class Garage
 
     /**
      * @ORM\ManyToOne(targetEntity=Professionnel::class, inversedBy="garages")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(nullable=false)
      */
     private $professionnel;
 

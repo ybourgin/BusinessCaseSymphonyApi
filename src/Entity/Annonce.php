@@ -28,9 +28,8 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
  *                  "groups"={"annonce:get"}
  *              }
  *          },
- *          "put"={"security"="is_granted('ROLE_USER')"},
- *          "patch"={"security"="is_granted('ROLE_USER')"},
- *          "delete"={"security"="is_granted('ROLE_USER')"},
+ *          "patch"={"security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"},
  *      },
  * )
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
@@ -43,6 +42,7 @@ class Annonce
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $id;
 
@@ -54,7 +54,7 @@ class Annonce
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $titre;
 

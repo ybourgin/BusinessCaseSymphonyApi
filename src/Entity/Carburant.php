@@ -2,16 +2,37 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CarburantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"carburant:get"}
+ *              }
+ *          },
+ *          "post"={"security"="is_granted('ROLE_ADMIN')"},
+ *      },
+ *     itemOperations={
+ *          "get"={
+ *              "normalization_context"={
+ *                  "groups"={"carburant:get"}
+ *              }
+ *          },
+ *          "patch"={"security"="is_granted('ROLE_ADMIN')"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN')"},
+ *      },
+ * )
  * @ORM\Entity(repositoryClass=CarburantRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"type"})
  */
 class Carburant
 {
@@ -24,7 +45,7 @@ class Carburant
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"annonce:get", "annonce:get_lite"})
+     * @Groups({"annonce:get", "annonce:get_lite", "carburant:get" })
      */
     private $type;
 
