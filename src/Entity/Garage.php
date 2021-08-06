@@ -27,8 +27,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *                  "groups"={"garage:get"}
  *              }
  *          },
- *          "patch"={"security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"},
- *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"},
+ *          "patch"={"security"="is_granted('ROLE_ADMIN') or object.professionnel == user"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.professionnel == user"},
  *      },
  * )
  * @ORM\Entity(repositoryClass=GarageRepository::class)

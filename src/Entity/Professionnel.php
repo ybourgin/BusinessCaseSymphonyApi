@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -80,6 +81,9 @@ class Professionnel implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=10)
      * @Groups({"professionnel:get"})
+     * @Assert\Email(
+     *     message="l'email renseigné n'est pas un email valide"
+     * )
      */
     private $telephone;
 

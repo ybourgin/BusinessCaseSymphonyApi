@@ -169,7 +169,7 @@ class Annonce
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"annonce:get"})
      */
-    private $garage;
+    public $garage;
 
     public function __construct()
     {
