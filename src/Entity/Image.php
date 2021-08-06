@@ -8,7 +8,31 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *    collectionOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_ADMIN')"
+ *          },
+ *          "post"={
+ *              "security"="is_granted('ROLE_USER')"
+ *          }
+ *      },
+ *      itemOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.annonce.garage.professionnel == user"
+ *          },
+ *          "delete"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.annonce.garage.professionnel == user"
+ *          },
+ *          "patch"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.annonce.garage.professionnel == user"
+ *          }
+ *      },
+ *
+ *     normalizationContext={
+ *          "groups"={"image:get"}
+ *      }
+ * )
  * @ORM\Entity(repositoryClass=ImageRepository::class)
  */
 class Image
@@ -17,18 +41,19 @@ class Image
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("image:get")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get","image:get"})
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get","image:get"})
      */
     private $path;
 

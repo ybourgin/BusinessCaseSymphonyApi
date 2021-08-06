@@ -10,7 +10,11 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -33,8 +37,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
  *      },
  * )
  * @ORM\Entity(repositoryClass=AnnonceRepository::class)
- * @ApiFilter(SearchFilter::class, properties={"modele.marque.nom","modele.nom","categorieVoitures.nom","carburant.type"})
- * @ApiFilter(NumericFilter::class, properties={"prix","kilometrage","annee","reference"})
+ * @ApiFilter(SearchFilter::class, properties={"modele.marque.nom"="partial","modele.nom"="partial","categorieVoitures.nom","carburant.type"})
+ * @ApiFilter(RangeFilter::class, properties={"prix","kilometrage","annee"})
+ * @ApiFilter(DateFilter::class, properties={"dateCreation"})
+ * @ApiFilter(BooleanFilter::class, properties={"estManuelle"})
+ * @ApiFilter(NumericFilter::class, properties={"reference"="partiel"})
  */
 class Annonce
 {
@@ -61,6 +68,12 @@ class Annonce
     /**
      * @ORM\Column(type="integer")
      * @Groups({"annonce:get", "annonce:get_lite"})
+     * @Assert\NotBlank(
+     *     message="Cette annonce ne possède pas de titre lisible"
+     * )
+     * @Assert\NotNull(
+     *     message="Cette annonce doit posséder un titre"
+     * )
      */
     private $kilometrage;
 
@@ -84,7 +97,7 @@ class Annonce
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $dateCreation;
 
@@ -103,12 +116,12 @@ class Annonce
 
     /**
      * @ORM\OneToMany(targetEntity=Image::class, mappedBy="annonce")
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $images;
 
     /**
-     * @ORM\ManyToMany(targetEntity=CategorieVoiture::class, inversedBy="annonces")
+     * @ORM\ManyToMany(targetEntity=CategorieVoiture::class, inversedBy="annonces", cascade={"remove"})
      * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $categorieVoitures;

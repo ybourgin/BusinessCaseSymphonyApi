@@ -10,7 +10,27 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     collectionOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "normalization_context"={
+ *                  "groups"={"garage:get"}
+ *              }
+ *          },
+ *          "post"={"security"="is_granted('ROLE_USER')"},
+ *      },
+ *     itemOperations={
+ *          "get"={
+ *              "security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user",
+ *              "normalization_context"={
+ *                  "groups"={"garage:get"}
+ *              }
+ *          },
+ *          "patch"={"security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN') or object.garage.professionnel == user"},
+ *      },
+ * )
  * @ORM\Entity(repositoryClass=GarageRepository::class)
  */
 class Garage
@@ -24,49 +44,49 @@ class Garage
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"annonce:get"})
+     * @Groups({"annonce:get", "garage:get", "professionnel:get"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=10)
-     * @Groups({"annonce:get"})
+     * @Groups({"professionnel:get", "garage:get"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=14)
-     * @Groups({"annonce:get"})
+     * @Groups({"garage:get"})
      */
     private $siret;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"annonce:get"})
+     * @Groups({"garage:get"})
      */
     private $adresseLigne1;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"annonce:get"})
+     * @Groups({"garage:get"})
      */
     private $adresseLigne2;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Groups({"annonce:get"})
+     * @Groups({"garage:get"})
      */
     private $adresseLigne3;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"annonce:get"})
+     * @Groups({"garage:get"})
      */
     private $ville;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups({"annonce:get"})
+     * @Groups({"garage:get"})
      */
     private $codePostal;
 
@@ -76,10 +96,10 @@ class Garage
     private $annonces;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Professionnel::class, inversedBy="garages")
+     * @ORM\ManyToOne(targetEntity=Professionnel::class, inversedBy="garages", cascade={"remove"})
      * @ORM\Column(nullable=false)
      */
-    private $professionnel;
+    public $professionnel;
 
     public function __construct()
     {

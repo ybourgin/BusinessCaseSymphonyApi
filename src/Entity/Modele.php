@@ -10,7 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *     attributes={
+ *     "security"="is_granted('ROLE_ADMIN')",
+ *     }
+ * )
  * @ORM\Entity(repositoryClass=ModeleRepository::class)
  */
 class Modele

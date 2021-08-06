@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProfessionnelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -9,22 +10,29 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
  *     attributes={
- *          "security"="is_granted('ROLE_ADMIN')"
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "normalization_context"={"groups"={"professionel:get"}}
  *     },
- *     collectionOperations={
+ *     itemOperations={
  *          "get"={
- *              "security"="is_granted('ROLE_ADMIN')"
+ *              "security"="is_granted('ROLE_ADMIN') or object == user",
+ *              "normalization_context"={"groups"={"professionnel:get"}}
  *          },
- *          "post"={
- *              "security"="is_granted('ROLE_ADMIN')"
- *          }
- *     }
+ *          "patch"={"security"="is_granted('ROLE_ADMIN')"},
+ *          "delete"={"security"="is_granted('ROLE_ADMIN')"}
+ *      }
  * )
+ *
  * @ORM\Entity(repositoryClass=ProfessionnelRepository::class)
+ * @ApiFilter(SearchFilter::class, properties={"nom"="partial","prenom"="partial","adresseMail"="partial","garages.name"="partial"})
+ * @ApiFilter(NumericFilter::class, properties={"telephone"="partial","siren"="partial"})
  */
 class Professionnel implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -53,34 +61,40 @@ class Professionnel implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"professionnel:get"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"professionnel:get"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"professionnel:get"})
      */
     private $adresseMail;
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Groups({"professionnel:get"})
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="string", length=14)
+     * @Groups({"professionnel:get"})
      */
     private $siren;
 
     /**
-     * @ORM\OneToMany(targetEntity=Garage::class, mappedBy="professionnel")
+     * @ORM\OneToMany(targetEntity=Garage::class, mappedBy="professionnel", cascade={"remove"})
      * @ORM\Column(nullable=true)
+     * @Groups({"professionnel:get"})
      */
-    private $garages;
+    public $garages;
 
     public function __construct()
     {
@@ -111,7 +125,7 @@ class Professionnel implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->login;
+        return (string)$this->login;
     }
 
     /**
@@ -119,7 +133,7 @@ class Professionnel implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->login;
+        return (string)$this->login;
     }
 
     /**
