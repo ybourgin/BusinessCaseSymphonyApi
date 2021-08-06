@@ -62,6 +62,18 @@ class Annonce
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"annonce:get", "annonce:get_lite"})
+     * @Assert\NotBlank(
+     *     message="Cette annonce ne possède pas de titre lisible"
+     * )
+     * @Assert\NotNull(
+     *     message="Cette annonce doit posséder un titre"
+     * )
+     * @Assert\Length(
+     *     min=3,
+     *     max=50,
+     *     minMessage="votre titre doit avoir au moins 5 caractères",
+     *     maxMessage="votre titre ne doit pas avoir plus de 50 caractères"
+     * )
      */
     private $titre;
 
@@ -69,10 +81,10 @@ class Annonce
      * @ORM\Column(type="integer")
      * @Groups({"annonce:get", "annonce:get_lite"})
      * @Assert\NotBlank(
-     *     message="Cette annonce ne possède pas de titre lisible"
+     *     message="Le champ kilomètrage doit contenir des chiffres"
      * )
      * @Assert\NotNull(
-     *     message="Cette annonce doit posséder un titre"
+     *     message="Le champ kilomètrage doit être rempli"
      * )
      */
     private $kilometrage;
@@ -80,12 +92,31 @@ class Annonce
     /**
      * @ORM\Column(type="decimal", precision=9, scale=2)
      * @Groups({"annonce:get", "annonce:get_lite"})
+     * @Assert\NotBlank(
+     *     message="Le champ prix doit contenir des chiffres"
+     * )
+     * @Assert\NotNull(
+     *     message="Le champ prix doit être rempli"
+     * )
+     * @Assert\Positive(
+     *     message="Un prix doit être supérieur à 0 Euros"
+     * )
      */
     private $prix;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"annonce:get", "annonce:get_lite"})
+     * @Assert\NotBlank(
+     *     message="Le champ année doit contenir des chiffres"
+     * )
+     * @Assert\NotNull(
+     *     message="Le champ année doit être rempli"
+     * )
+     * @Assert\GreaterThan(
+     *     value="1908",
+     *     message="un véhicule ne peut pas être antérieur à 1908"
+     * )
      */
     private $annee;
 
@@ -115,13 +146,13 @@ class Annonce
     private $modele;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="annonce")
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="annonce", cascade={"remove"})
      * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $images;
 
     /**
-     * @ORM\ManyToMany(targetEntity=CategorieVoiture::class, inversedBy="annonces", cascade={"remove"})
+     * @ORM\ManyToMany(targetEntity=CategorieVoiture::class, inversedBy="annonces")
      * @Groups({"annonce:get", "annonce:get_lite"})
      */
     private $categorieVoitures;
